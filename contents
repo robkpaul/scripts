@@ -1,0 +1,28 @@
+#!/usr/bin/python3
+
+import sys, os
+
+def toc(dirpath):
+    parent = dirpath.split("/")[-1]
+    for dir in os.listdir(dirpath):
+        path = os.path.join(dirpath, dir)
+        if not os.path.isdir(path) or  dir == "prepend" or dir[0] == ".":
+            continue
+        if "-r" in sys.argv:
+            toc(os.path.join(dirpath, dir))
+        contents = f"[[{parent}]]\n\n*Contents*\n"
+        files = os.listdir(path)
+        files.sort()
+        for fname in files:
+            if not fname[-3:] == ".md":
+                continue
+            contents += f"[[{fname[:-3]}]]\n"
+        fpath = path + ".md"
+        print(fpath)
+        with open(fpath, "w") as f:
+            f.write(contents)
+
+val = input("Generate tables of contents? (y/N) ") if not "-y" in sys.argv else "y"
+if(val.lower() != "y"):
+    exit()
+toc(os.getcwd())

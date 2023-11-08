@@ -1,0 +1,19 @@
+#!/usr/bin/python3
+
+import os, sys
+
+if len (sys.argv) < 3:
+    exit()
+
+x = int(sys.argv[1])
+y = int(sys.argv[1])
+
+with open("00_hexes.md", "w") as f:
+    f.write("[[04_locations]]\n")
+    for i in range(x):
+        f.write(f"\n## {str(i).rjust(3, '0')}\n\n")
+        for j in range(y):
+            fname  = f"{str(i).rjust(3, '0')}_{str(j).rjust(3, '0')}.md"
+            with open(f"00_hexes/{fname}", "w") as g:
+                g.write("[[00_hexes]]\n")
+                f.write(f"[[{fname[:-3]}]]\n")

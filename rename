@@ -1,0 +1,17 @@
+#!/usr/bin/python3
+
+import sys, os
+
+val = input("Run rename (y/N) ") if not "-y" in sys.argv else "y"
+if(val.lower() != "y"):
+    exit()
+i = 0
+for fname in os.listdir(os.getcwd()):
+    path = os.path.join(os.getcwd(), fname)
+    if fname == "prepend":
+        break
+    num = str(i).rjust(2, "0") + "_"
+    name = num + fname.replace(" ", "_").lower()
+    print(name)
+    os.rename(fname, name)
+    i += 1

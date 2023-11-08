@@ -1,0 +1,27 @@
+#!/usr/bin/python3
+
+import sys, os
+
+def prepend(dirpath):
+    dirname = dirpath.split("/")[-1]
+    first_line = f"[[{dirname}]]\n\n"
+    for fname in os.listdir(dirpath):
+        path = os.path.join(dirpath, fname)
+        if os.path.isdir(path):
+            if "-r" in sys.argv:
+                prepend(path)
+            continue
+        if fname[-3:] != ".md":
+            continue
+        print(path)
+        content = ""
+        with open(path) as f:
+            content = f.read()
+        result =  first_line + content
+        with open(path, "w") as f:
+            f.write(result)
+
+val = input("Run prepend (y/N) ") if not "-y" in sys.argv else "y"
+if(val.lower() != "y"):
+    exit()
+prepend(os.getcwd())
