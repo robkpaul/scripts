@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 
-import os, sys
+import sys
+
+compass = ["n", "nw", "ne", "s", "sw", "se"]
 
 if len (sys.argv) < 3:
     exit()
 
 x = int(sys.argv[1])
-y = int(sys.argv[1])
+y = int(sys.argv[2])
 
 with open("00_hexes.md", "w") as f:
     f.write("[[04_locations]]\n")
@@ -15,5 +17,43 @@ with open("00_hexes.md", "w") as f:
         for j in range(y):
             fname  = f"{str(i).rjust(3, '0')}_{str(j).rjust(3, '0')}.md"
             with open(f"00_hexes/{fname}", "w") as g:
-                g.write("[[00_hexes]]\n")
+                print(fname[:-3])
+                adj = {"n": f"{str(i).rjust(3, '0')}_{str(j-1).rjust(3, '0')}", "s": f"{str(i).rjust(3, '0')}_{str(j+1).rjust(3, '0')}"}
+                if not i % 2:
+                    adj["nw"] = f"{str(i-1).rjust(3, '0')}_{str(j-1).rjust(3, '0')}"
+                    adj["sw"] = f"{str(i-1).rjust(3, '0')}_{str(j).rjust(3, '0')}"
+                    adj["ne"] = f"{str(i+1).rjust(3, '0')}_{str(j-1).rjust(3, '0')}"
+                    adj["se"] = f"{str(i+1).rjust(3, '0')}_{str(j).rjust(3, '0')}"
+                else:
+                    adj["nw"] = f"{str(i-1).rjust(3, '0')}_{str(j).rjust(3, '0')}"
+                    adj["sw"] = f"{str(i-1).rjust(3, '0')}_{str(j+1).rjust(3, '0')}"
+                    adj["ne"] = f"{str(i+1).rjust(3, '0')}_{str(j).rjust(3, '0')}"
+                    adj["se"] = f"{str(i+1).rjust(3, '0')}_{str(j+1).rjust(3, '0')}"
+
+                if j == 0: # top border
+                    if not i % 2:
+                        adj.pop("nw", None)
+                        adj.pop("ne", None)
+                    adj.pop("n", None)
+                elif j == y-1: # bottom border
+                    if i % 2:
+                        adj.pop("sw", None)
+                        adj.pop("se", None)
+                    adj.pop("s", None)
+                
+                if i == 0: # left border 
+                    adj.pop("nw", None)
+                    adj.pop("sw", None)
+                elif i == x-1: # right border
+                    adj.pop("ne", None)
+                    adj.pop("se", None)
                 f.write(f"[[{fname[:-3]}]]\n")
+                
+                g.write("[[00_hexes]]\n\n*Adjacent Hexes*\n")
+                
+                for c in compass:
+                    if c in adj.keys():
+                        g.write(f"{c}: [[{adj[c]}]]\n")
+
+                g.write("\n---\n")
+
