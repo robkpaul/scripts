@@ -1,0 +1,25 @@
+#!/usr/bin/python3
+
+import sys
+
+if len (sys.argv) < 3:
+    exit()
+
+x = int(sys.argv[1])
+y = int(sys.argv[2])
+
+table = []
+
+for i in range(x):
+    col = []
+    for j in range(y):
+        col.append(f"{str(j).rjust(3, '0')}_{str(i).rjust(3, '0')}")
+    table.append(col)
+
+print(("| "*x)+"|")
+print(("| - "*x)+"|")
+
+for col in table:
+    for h in col:
+        print(f"| [[{h}]] ", end="")
+    print("|")
